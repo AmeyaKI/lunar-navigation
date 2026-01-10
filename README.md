@@ -1,17 +1,26 @@
 # lunar-navigation
 
+## Objective Overview
 Individually saved work from STAC. 
 Goal: Assist navigation of lunar rover through computer vision.
 
+## Data
+Artificial Lunar Landscape Dataset:
+-roughly different 10,000 rendered images of lunar surfaces
+-csv file with bounding box dimensions for each object; varies from 0 to multiple objects per image
+
+## Initial Analysis
 Initial analysis entailed rock classification and object detection using PyTorch + Faster R-CNN. Work saved in prev-rcnn/. Final model in prev-rcnn/lunar_object_detection.ipynb
 
+## Final Analysis
+To assist with navigation on lunar surfaces, a ResNet18 CNN + MiDaS depth estimation computer vision pipeline was developed.
 
-In order to dramatically accelerating data processing and more specifically model training through Google Colab's GPUs, most relevant classes, functions, and model refinement occurred in Google Colab notebook: src/lunar_nav.ipynb. Hence, a more detailed description of analysis, steps involved, etc included in this notebook.
+In order to dramatically accelerating data processing and more specifically model training through Google Colab's GPUs, most relevant classes, functions, and model refinement occurred in Google Colab notebook: **src/lunar_nav.ipynb**. Hence, a more detailed description of analysis, steps involved, etc included in this notebook.
 
 
 # Citations
 
-Lunar Landscape Dataset:
+Artificial Lunar Landscape Dataset:
 @misc{romain_pessia_prof__genya_ishigami_quentin_jodelet_2025,
 	title={Artificial Lunar Landscape Dataset},
 	url={https://www.kaggle.com/dsv/13263000},
