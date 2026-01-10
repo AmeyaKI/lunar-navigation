@@ -15,12 +15,12 @@ Initial analysis entailed rock classification and object detection using PyTorch
 ## Final Analysis
 To assist with navigation on lunar surfaces, a ResNet18 CNN + MiDaS depth estimation computer vision pipeline was developed.
 
-In order to dramatically accelerating data processing and more specifically model training through Google Colab's GPUs, most relevant classes, functions, and model refinement occurred in Google Colab notebook: **src/lunar_nav.ipynb**. Hence, a more detailed description of analysis, steps involved, etc included in this notebook.
+In order to dramatically accelerating data processing and more specifically model training through Google Colab's GPUs, all relevant classes, functions, and model refinement occurred in Google Colab notebook: **src/lunar_nav.ipynb**. A more detailed description of analysis, steps involved, etc is included in this notebook.
 
 
 # Citations
 
-Artificial Lunar Landscape Dataset:
+**Artificial Lunar Landscape Dataset**:
 @misc{romain_pessia_prof__genya_ishigami_quentin_jodelet_2025,
 	title={Artificial Lunar Landscape Dataset},
 	url={https://www.kaggle.com/dsv/13263000},
@@ -30,7 +30,7 @@ Artificial Lunar Landscape Dataset:
 	year={2025}
 }
 
-MiDaS Depth Estimation
+**MiDaS Depth Estimation Model:**
 @article{Ranftl2020,
 	author    = {Ren\'{e} Ranftl and Katrin Lasinger and David Hafner and Konrad Schindler and Vladlen Koltun},
 	title     = {Towards Robust Monocular Depth Estimation: Mixing Datasets for Zero-shot Cross-dataset Transfer},
