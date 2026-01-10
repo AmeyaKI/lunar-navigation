@@ -1,15 +1,36 @@
 # lunar-navigation
 
+Individually saved work from STAC. 
+Goal: Assist navigation of lunar rover through computer vision.
 
-STAC research work
-
-
-prev-rcnn./ contains previous rock classification / object detection using Faster R-CNN
-
+Initial analysis entailed rock classification and object detection using PyTorch + Faster R-CNN. Work saved in prev-rcnn/. Final model in prev-rcnn/lunar_object_detection.ipynb
 
 
-midas:
-https://pytorch.org/hub/intelisl_midas_v2/
+In order to dramatically accelerating data processing and more specifically model training through Google Colab's GPUs, most relevant classes, functions, and model refinement occurred in Google Colab notebook: src/lunar_nav.ipynb. Hence, a more detailed description of analysis, steps involved, etc included in this notebook.
 
-dataset:
-https://www.kaggle.com/datasets/romainpessia/artificial-lunar-rocky-landscape-dataset
+
+# Citations
+
+Lunar Landscape Dataset:
+@misc{romain_pessia_prof__genya_ishigami_quentin_jodelet_2025,
+	title={Artificial Lunar Landscape Dataset},
+	url={https://www.kaggle.com/dsv/13263000},
+	DOI={10.34740/KAGGLE/DSV/13263000},
+	publisher={Kaggle},
+	author={Romain Pessia and Prof. Genya Ishigami and Quentin Jodelet},
+	year={2025}
+}
+
+MiDaS Depth Estimation
+@article{Ranftl2020,
+	author    = {Ren\'{e} Ranftl and Katrin Lasinger and David Hafner and Konrad Schindler and Vladlen Koltun},
+	title     = {Towards Robust Monocular Depth Estimation: Mixing Datasets for Zero-shot Cross-dataset Transfer},
+	journal   = {IEEE Transactions on Pattern Analysis and Machine Intelligence (TPAMI)},
+	year      = {2020},
+}
+@article{Ranftl2021,
+	author    = {Ren\'{e} Ranftl and Alexey Bochkovskiy and Vladlen Koltun},
+	title     = {Vision Transformers for Dense Prediction},
+	journal   = {ArXiv preprint},
+	year      = {2021},
+}
