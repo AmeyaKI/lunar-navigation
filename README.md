@@ -1,8 +1,9 @@
 # lunar-navigation
 
 ## Objective Overview
-Individually saved work from STAC. 
 Goal: Assist navigation of lunar rover through computer vision.
+(Saved work from STAC)
+
 
 ## Data
 Artificial Lunar Landscape Dataset:
@@ -15,10 +16,22 @@ Initial analysis entailed rock classification and object detection using PyTorch
 ## Final Analysis
 To assist with navigation on lunar surfaces, a ResNet18 CNN + MiDaS depth estimation computer vision pipeline was developed.
 
-In order to dramatically accelerating data processing and more specifically model training through Google Colab's GPUs, all relevant classes, functions, and model refinement occurred in Google Colab notebook: **src/lunar_nav.ipynb**. A more detailed description of analysis, steps involved, etc is included in this notebook.
+In order to dramatically accelerating data processing and more specifically model training through Google Colab's GPUs, all relevant classes, functions, and model refinement occurred in Google Colab notebook: **src/lunar_nav.ipynb**. A more detailed description of each step is included in this notebook.
 
+TLDR of analysis steps:
+1. Processed and filtered dataset (both images and bounding box csv): Removed images deemed faulty by dataset authors, Reformatted directories for convenience of use
+2. Depth Estimation: Used MiDaS DPT-Hybrid to calculate relative depth maps for each image. Opted for MiDaS over U-Net segmentation because of faster speed of computation and stronger performance on unseen imagery
+3. Terrain Analysis: To best guide the lunar rover, 3 terrain features were selected: relative height of detected object, relative size of detected object, and relative distance from rover to object. A custom PyTorch Dataset class and CNN pipeline were used to accurately estimate these 3 features. Dataset split into train/test.
 
-# Citations
+## End Results
+CNN achieved a high degree of accuracy measured with Mean Squared Error (MSE) and Mean Absolute Error (MAE), even after a limited number of epochs.
+
+total_mse: 0.0004
+total_mae: 0.0135
+
+Next steps: Integrate model for inference for rover movement and navigation calculations.
+
+## Citations
 
 **Artificial Lunar Landscape Dataset**:
 @misc{romain_pessia_prof__genya_ishigami_quentin_jodelet_2025,
