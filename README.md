@@ -1,35 +1,41 @@
 # lunar-navigation
 
-## Objective Overview
-Goal: Assist navigation of lunar rover through computer vision.
-(Saved work from STAC)
+## Objective
 
+Distill MiDaS DPT-Hybrid geometry estimates into a small **RGB-only** ResNet18 that could run on rover hardware. Given dataset-provided bounding boxes (not a trained detector), the model predicts relative distance and relative height pseudo-labels derived from monocular depth.
+
+This repo prioritizes **honest, checkable claims** over impressive-sounding numbers.
+
+## What changed and why
+
+The original pipeline in [`src/lunar_nav_v1.ipynb`](src/lunar_nav_v1.ipynb) reported `total_mae: 0.0135`, but that metric is **not defensible**:
+
+1. Regression targets (`rel_distance`, `rel_height`, `rel_size`) were computed from the same MiDaS depth map fed to the model.
+2. `rel_distance` is the center pixel of the depth crop — literally present in the input.
+3. `rel_size` was passed in the `meta` tensor and also used as a target (the model was fed its own label).
+4. MiDaS produces **relative**, not metric, depth — there is no ground-truth geometry in this dataset.
+5. The training loop never reset `total_loss` across epochs, so printed loss rose every epoch.
+
+The patched pipeline removes leakage: **RGB-only** ResNet18, **two targets** (distance, height; `rel_size` dropped because box area is computable without a model), frame-level **72/8/20** splits, and evaluation against **mean** and **bbox-only ridge** baselines with bootstrap 95% CIs.
 
 ## Data
-Artificial Lunar Landscape Dataset:
--roughly different 10,000 rendered images of lunar surfaces
--csv file with bounding box dimensions for each object; varies from 0 to multiple objects per image
 
-## Initial Analysis
-Initial analysis entailed rock classification and object detection using PyTorch + Faster R-CNN. Work saved in prev-rcnn/. Final model in prev-rcnn/lunar_object_detection.ipynb
+[Artificial Lunar Landscape Dataset](https://www.kaggle.com/datasets/romainpessia/artificial-lunar-rocky-landscape-dataset) — ~10,000 rendered lunar surface images with bounding-box CSV. After filtering 773 faulty frames (per dataset authors), **8,993** frames remain. Boxes are **dataset-provided**; the model does not detect objects.
 
-## Final Analysis
-To assist with navigation on lunar surfaces, a ResNet18 CNN + MiDaS depth estimation computer vision pipeline was developed.
+## Previous work (`prev-rcnn/`)
 
-In order to dramatically accelerating data processing and more specifically model training through Google Colab's GPUs, all relevant classes, functions, and model refinement occurred in Google Colab notebook: **src/lunar_nav.ipynb**. A more detailed description of each step is included in this notebook.
+An early attempt at rock classification and Faster R-CNN object detection lives in [`prev-rcnn/`](prev-rcnn/). It was abandoned: RCNN was too heavy for local training, and the final geometry pipeline uses **dataset-provided boxes**, not detector outputs. Do not describe this project as detecting or classifying rocks in the final pipeline.
 
-TLDR of analysis steps:
-1. Processed and filtered dataset (both images and bounding box csv): Removed images deemed faulty by dataset authors, Reformatted directories for convenience of use
-2. Depth Estimation: Used MiDaS DPT-Hybrid to calculate relative depth maps for each image. Opted for MiDaS over U-Net segmentation because of faster speed of computation and stronger performance on unseen imagery
-3. Terrain Analysis: To best guide the lunar rover, 3 terrain features were selected: relative height of detected object, relative size of detected object, and relative distance from rover to object. A custom PyTorch Dataset class and CNN pipeline were used to accurately estimate these 3 features. Dataset split into train/test.
+## Running the honest evaluation
 
-## End Results
-CNN achieved a high degree of accuracy measured with Mean Squared Error (MSE) and Mean Absolute Error (MAE), even after a limited number of epochs.
+Results are **not** hard-coded. To reproduce:
 
-total_mse: 0.0004
-total_mae: 0.0135
+1. Open [`colab/run_all.ipynb`](colab/run_all.ipynb) in Google Colab Pro.
+2. Set runtime to **A100 GPU** (Runtime → Change runtime type).
+3. Add Colab secrets: `GITHUB_TOKEN`, `KAGGLE_KEY` (and optionally `KAGGLE_USERNAME` if `KAGGLE_KEY` is a raw API key).
+4. **Run all** cells. Depth maps, training, baselines, and latency run on Colab; results are written to `RESULTS.md` and `HANDOFF.md` and pushed back to branch `fix/leakage-distill`.
 
-Next steps: Integrate model for inference for rover movement and navigation calculations.
+After a successful run, see [`RESULTS.md`](RESULTS.md) for MAE tables with CIs, latency, and hardware. See [`HANDOFF.md`](HANDOFF.md) for the owner verdict on whether ResNet18 beat the ridge baseline outside CIs.
 
 ## Citations
 

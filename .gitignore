@@ -1,3 +1,7 @@
 TODO
 nav-env
 .idea
+PATCH_BRIEF.md
+*.egg-info
+__pycache__
+.pytest_cache
